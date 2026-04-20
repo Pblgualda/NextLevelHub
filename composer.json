@@ -1,15 +1,15 @@
 {
-    "name": "pablo/agenda",
-    "description": "Proyecto agenda con composer",
+    "name": "pablo/nextlevelhub",
+    "description": "Proyecto tienda con composer",
     "type": "project",
     "autoload": {
         "psr-4": {
-            "Agenda\\Controllers\\": "src/Controllers/",
-            "Agenda\\Models\\": "src/Models/",
-            "Agenda\\Core\\": "src/Core/",
-            "Agenda\\Repositories\\": "src/Repositories/",
-            "Agenda\\Request\\": "src/Request",
-            "Agenda\\Services\\": "src/Services"
+            "NextLevelHub\\Controllers\\": "src/Controllers/",
+            "NextLevelHub\\Models\\": "src/Models/",
+            "NextLevelHub\\Core\\": "src/Core/",
+            "NextLevelHub\\Repositories\\": "src/Repositories/",
+            "NextLevelHub\\Request\\": "src/Request",
+            "NextLevelHub\\Services\\": "src/Services"
         }
     },
     "minimum-stability": "stable",
