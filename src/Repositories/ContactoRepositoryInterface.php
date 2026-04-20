@@ -1,6 +1,6 @@
 <?php
 
-namespace Agenda\Repositories;
+namespace NextLevelHub\Repositories;
 
 interface ContactoRepositoryInterface
 {

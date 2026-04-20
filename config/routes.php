@@ -1,8 +1,8 @@
 <?php
 
-use Agenda\Controllers\ContactoController;
-use Agenda\Controllers\DashboardController;
-use Agenda\Core\Router;
+use NextLevelHub\Controllers\ContactoController;
+use NextLevelHub\Controllers\DashboardController;
+use NextLevelHub\Core\Router;
 
 // Ruta principal
 Router::add('GET', '/', static function() {

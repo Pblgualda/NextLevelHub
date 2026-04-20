@@ -1,7 +1,7 @@
 <?php
 
-namespace Agenda\Controllers;
-use Agenda\Core\Pages;
+namespace NextLevelHub\Controllers;
+use NextLevelHub\Core\Pages;
 class DashboardController
 {
     public function __construct(){

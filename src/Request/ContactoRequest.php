@@ -1,6 +1,6 @@
 <?php
 
-namespace Requests;
+namespace NextLevelHub\Request;
 
 class ContactoRequest
 {

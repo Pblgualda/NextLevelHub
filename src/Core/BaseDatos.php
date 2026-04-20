@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 
-namespace Agenda\Core;
+namespace NextLevelHub\Core;
 
 use PDO;
 use PDOStatement;

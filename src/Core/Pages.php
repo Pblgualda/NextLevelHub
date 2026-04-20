@@ -1,5 +1,5 @@
 <?php
-namespace Agenda\Core;
+namespace NextLevelHub\Core;
 
 
 class Pages

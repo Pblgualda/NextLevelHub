@@ -1,6 +1,6 @@
 <?php
 
-namespace Agenda\Controllers;
+namespace NextLevelHub\Controllers;
 
 class AuthController
 {

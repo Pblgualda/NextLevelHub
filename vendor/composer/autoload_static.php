@@ -25,6 +25,15 @@ class ComposerStaticInit288135d1778331d01567747cc94f5e80
         array (
             'PhpOption\\' => 10,
         ),
+        'N' =>
+        array (
+            'NextLevelHub\\Services\\' => 22,
+            'NextLevelHub\\Request\\' => 21,
+            'NextLevelHub\\Repositories\\' => 26,
+            'NextLevelHub\\Models\\' => 20,
+            'NextLevelHub\\Core\\' => 18,
+            'NextLevelHub\\Controllers\\' => 25,
+        ),
         'G' =>
         array (
             'GrahamCampbell\\ResultType\\' => 26,
@@ -32,15 +41,6 @@ class ComposerStaticInit288135d1778331d01567747cc94f5e80
         'D' =>
         array (
             'Dotenv\\' => 7,
-        ),
-        'A' =>
-        array (
-            'Agenda\\Services\\' => 16,
-            'Agenda\\Request\\' => 15,
-            'Agenda\\Repositories\\' => 20,
-            'Agenda\\Models\\' => 14,
-            'Agenda\\Core\\' => 12,
-            'Agenda\\Controllers\\' => 19,
         ),
     );
 
@@ -65,6 +65,30 @@ class ComposerStaticInit288135d1778331d01567747cc94f5e80
         array (
             0 => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption',
         ),
+        'NextLevelHub\\Services\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/src/Services',
+        ),
+        'NextLevelHub\\Request\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/src/Request',
+        ),
+        'NextLevelHub\\Repositories\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/src/Repositories',
+        ),
+        'NextLevelHub\\Models\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/src/Models',
+        ),
+        'NextLevelHub\\Core\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/src/Core',
+        ),
+        'NextLevelHub\\Controllers\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/src/Controllers',
+        ),
         'GrahamCampbell\\ResultType\\' =>
         array (
             0 => __DIR__ . '/..' . '/graham-campbell/result-type/src',
@@ -72,30 +96,6 @@ class ComposerStaticInit288135d1778331d01567747cc94f5e80
         'Dotenv\\' =>
         array (
             0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
-        ),
-        'Agenda\\Services\\' =>
-        array (
-            0 => __DIR__ . '/../..' . '/src/Services',
-        ),
-        'Agenda\\Request\\' =>
-        array (
-            0 => __DIR__ . '/../..' . '/src/Request',
-        ),
-        'Agenda\\Repositories\\' =>
-        array (
-            0 => __DIR__ . '/../..' . '/src/Repositories',
-        ),
-        'Agenda\\Models\\' =>
-        array (
-            0 => __DIR__ . '/../..' . '/src/Models',
-        ),
-        'Agenda\\Core\\' =>
-        array (
-            0 => __DIR__ . '/../..' . '/src/Core',
-        ),
-        'Agenda\\Controllers\\' =>
-        array (
-            0 => __DIR__ . '/../..' . '/src/Controllers',
         ),
     );
 

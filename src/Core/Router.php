@@ -1,9 +1,9 @@
 <?php
-namespace Agenda\Core;
+namespace NextLevelHub\Core;
 
 
 
-use Agenda\Controllers\ErrorController;
+use NextLevelHub\Controllers\ErrorController;
 
 class Router {
     private static array $routes = [];

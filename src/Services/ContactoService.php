@@ -1,10 +1,10 @@
 <?php
 
-namespace Agenda\Services;
+namespace NextLevelHub\Services;
 
-use Agenda\Models\Contacto;
-use Agenda\Core\BaseDatos;
-use Agenda\Repositories\ContactoRepository;
+use NextLevelHub\Models\Contacto;
+use NextLevelHub\Core\BaseDatos;
+use NextLevelHub\Repositories\ContactoRepository;
 
 class ContactoService
 {

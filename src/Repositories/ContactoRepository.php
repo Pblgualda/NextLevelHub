@@ -1,9 +1,9 @@
 <?php
 
-namespace Agenda\Repositories;
+namespace NextLevelHub\Repositories;
 
-use Agenda\Core\BaseDatos;
-use Agenda\Models\Contacto;
+use NextLevelHub\Core\BaseDatos;
+use NextLevelHub\Models\Contacto;
 use RuntimeException;
 use Throwable;
 

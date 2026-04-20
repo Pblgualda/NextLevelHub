@@ -1,12 +1,12 @@
 <?php
 
-namespace Agenda\Controllers;
+namespace NextLevelHub\Controllers;
 
-use Agenda\Core\BaseDatos;
-use Agenda\Core\Pages;
-use Agenda\Models\Contacto;
-use Agenda\Request\ContactoRequest;
-use Agenda\Services\ContactoService;
+use NextLevelHub\Core\BaseDatos;
+use NextLevelHub\Core\Pages;
+use NextLevelHub\Models\Contacto;
+use NextLevelHub\Request\ContactoRequest;
+use NextLevelHub\Services\ContactoService;
 
 class ContactoController
 {

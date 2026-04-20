@@ -1,6 +1,6 @@
 <?php
 
-namespace Agenda\Models;
+namespace NextLevelHub\Models;
 
 class Contacto
 {
