@@ -1,0 +1,21 @@
+{
+    "name": "pablo/nextlevelhub",
+    "description": "Proyecto tienda con composer",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "NextLevelHub\\Controllers\\": "src/Controllers/",
+            "NextLevelHub\\Models\\": "src/Models/",
+            "NextLevelHub\\Core\\": "src/Core/",
+            "NextLevelHub\\Repositories\\": "src/Repositories/",
+            "NextLevelHub\\Request\\": "src/Request",
+            "NextLevelHub\\Services\\": "src/Services"
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "vlucas/phpdotenv": "^5.6",
+        "symfony/routing": "^7.4",
+        "stefangabos/zebra_pagination": "^2.4"
+    }
+}
