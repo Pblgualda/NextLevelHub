@@ -5,11 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="<?=BASE_URL?>css/header.css">
+    <link rel="stylesheet" href="<?=BASE_URL?>css/footer.css">
+    <link rel="stylesheet" href="<?=BASE_URL?>css/index.css">
+    
     <title>Empresa</title>
 </head>
 <body>
 <header>
-    
     <nav>
         <div id="logo">
             <img src="<?=BASE_URL?>img/logo.png" alt="Logo">

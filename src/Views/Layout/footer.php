@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="/NextLevelHub/public/css/footer.css">
 <footer>
     <div class="redes">
         <h3>¡Conócenos!</h3>

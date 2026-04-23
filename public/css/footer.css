@@ -16,10 +16,16 @@ footer
     align-items: center;
     width: 100%;
     padding: 60px;
+    margin-bottom: 0px;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    
 }
 
 footer .redes
 {
+    margin-left: 100px;
     width: 30%;
     text-align: center;
     justify-content: space-around;

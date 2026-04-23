@@ -66,7 +66,4 @@ namespace NextLevelHub\Models;
             $this->id = $created_at;
         }
 
-
-
-
     }
