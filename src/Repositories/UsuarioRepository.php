@@ -100,4 +100,31 @@ class UsuarioRepository implements UsuarioRepositoryInterface
             ':updated_at' => $usuario->getUpdatedAt(),
         ]);
     }
+
+    /**
+     * Busca un usuario por su email
+     * 
+     * @param string $email Email a buscar
+     * @return Usuario|null Usuario encontrado o null si no existe
+     */
+    public function findByEmail(string $email): ?Usuario
+    {
+        try {
+            $sql = "SELECT * FROM usuarios WHERE email = :email";
+            $this->conexion->ejecutar($sql, [':email' => $email]);
+
+            $resultado = $this->conexion->extraer();
+            if (!$resultado) {
+                return null;
+            }
+
+            return Usuario::fromArray($resultado);
+
+        } catch (PDOException $e) {
+            throw new RuntimeException(
+                "Error al buscar usuario por email: {$e->getMessage()}",
+                previous: $e
+            );
+        }
+    }
 }

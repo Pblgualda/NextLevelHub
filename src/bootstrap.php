@@ -1,5 +1,10 @@
 <?php
 
+// Iniciar la sesión
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 // Cargar el autoloader de Composer
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
