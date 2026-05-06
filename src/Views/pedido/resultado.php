@@ -54,7 +54,7 @@
                 </a>
             <?php elseif (!empty($facturaError)): ?>
                 <p class="factura-error">
-                    El pedido se confirmÃ³, pero no se pudo generar la factura PDF: <?= htmlspecialchars($facturaError) ?>
+                    El pedido se confirmo, pero no se pudo generar la factura PDF: <?= htmlspecialchars($facturaError) ?>
                 </p>
             <?php endif; ?>
         <?php endif; ?>

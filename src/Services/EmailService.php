@@ -69,7 +69,7 @@ class EmailService
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Confirmación de Pedido</title>
+            <title>Confirmacion de Pedido</title>
             <style>
                 body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
                 .container { max-width: 600px; margin: 0 auto; padding: 20px; }
@@ -86,7 +86,7 @@ class EmailService
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>Confirmación de Pedido</h1>
+                    <h1>Confirmacion de Pedido</h1>
                     <p>¡Gracias por tu compra en NextLevelHub!</p>
                 </div>
                 <div class="content">
@@ -145,7 +145,7 @@ class EmailService
                     <p>¡Gracias por elegir NextLevelHub!</p>
                 </div>
                 <div class="footer">
-                    <p>&copy; 2024 NextLevelHub. Todos los derechos reservados.</p>
+                    <p>&copy; 2026 NextLevelHub. Todos los derechos reservados.</p>
                 </div>
             </div>
         </body>
