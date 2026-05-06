@@ -75,7 +75,6 @@ class CarritoController
     {
         $referer = $_SERVER['HTTP_REFERER'] ?? '';
         header('Location: ' . ($referer !== '' ? $referer : $fallback));
-        exit;
     }
 
     public function add(): void
@@ -107,40 +106,37 @@ class CarritoController
 
         foreach ($cart as $productId => $quantity) {
             $product = $this->findProduct((int)$productId);
-            if (!$product) {
+            
+            if ($product) {
+                $stock = $product->getStock();
+                
+                if ($stock > 0 && $quantity > 0) {
+                    if ($quantity > $stock) {
+                        $quantity = $stock;
+                        $updatedCart[$productId] = $stock;
+                        $stockWarnings[] = sprintf('La cantidad de "%s" se ha ajustado al stock disponible (%d unidades).', $product->getNombre(), $stock);
+                    }
+                    
+                    $price = $product->getPrecioOferta() !== null ? $product->getPrecioOferta() : $product->getPrecio();
+                    $subtotal = $price * $quantity;
+                    $totalQuantity += $quantity;
+                    $totalCost += $subtotal;
+
+                    $items[] = [
+                        'producto' => $product,
+                        'cantidad' => $quantity,
+                        'precio' => $price,
+                        'subtotal' => $subtotal,
+                    ];
+                } else {
+                    unset($updatedCart[$productId]);
+                    if ($stock <= 0) {
+                        $stockWarnings[] = sprintf('El producto "%s" ya no está disponible y se ha eliminado del carrito.', $product->getNombre());
+                    }
+                }
+            } else {
                 unset($updatedCart[$productId]);
-                continue;
             }
-
-            $stock = $product->getStock();
-            if ($stock <= 0) {
-                unset($updatedCart[$productId]);
-                $stockWarnings[] = sprintf('El producto "%s" ya no está disponible y se ha eliminado del carrito.', $product->getNombre());
-                continue;
-            }
-
-            if ($quantity > $stock) {
-                $quantity = $stock;
-                $updatedCart[$productId] = $stock;
-                $stockWarnings[] = sprintf('La cantidad de "%s" se ha ajustado al stock disponible (%d unidades).', $product->getNombre(), $stock);
-            }
-
-            if ($quantity <= 0) {
-                unset($updatedCart[$productId]);
-                continue;
-            }
-
-            $price = $product->getPrecioOferta() !== null ? $product->getPrecioOferta() : $product->getPrecio();
-            $subtotal = $price * $quantity;
-            $totalQuantity += $quantity;
-            $totalCost += $subtotal;
-
-            $items[] = [
-                'producto' => $product,
-                'cantidad' => $quantity,
-                'precio' => $price,
-                'subtotal' => $subtotal,
-            ];
         }
 
         if ($updatedCart !== $cart) {
@@ -159,6 +155,9 @@ class CarritoController
         ]);
     }
 
+
+    //incrementar carrito
+
     public function increment(int $productId): void
     {
         if ($this->addToCart($productId, 1, $message)) {
@@ -168,40 +167,41 @@ class CarritoController
         }
 
         header('Location: ' . BASE_URL . 'carrito');
-        exit;
     }
 
+
+    //bajar cANTIDAD CARRITO
     public function decrement(int $productId): void
     {
         $cart = $this->getCart();
 
-        if (!isset($cart[$productId])) {
-            $_SESSION['carrito_message'] = 'Producto no encontrado en el carrito.';
-            header('Location: ' . BASE_URL . 'carrito');
-            exit;
-        }
-
-        $cart[$productId]--;
-        if ($cart[$productId] <= 0) {
-            unset($cart[$productId]);
-            $_SESSION['carrito_message'] = 'El producto se ha eliminado del carrito.';
-        } else {
-            $product = $this->findProduct($productId);
-            if (!$product) {
+        if (isset($cart[$productId])) {
+            $cart[$productId]--;
+            if ($cart[$productId] <= 0) {
                 unset($cart[$productId]);
-                $_SESSION['carrito_message'] = 'El producto ya no está disponible.';
-            } elseif ($cart[$productId] > $product->getStock()) {
-                $cart[$productId] = $product->getStock();
-                $_SESSION['carrito_message'] = 'La cantidad se ajustó al stock disponible.';
+                $_SESSION['carrito_message'] = 'El producto se ha eliminado del carrito.';
             } else {
-                $_SESSION['carrito_message'] = 'Cantidad reducida correctamente.';
+                $product = $this->findProduct($productId);
+                if (!$product) {
+                    unset($cart[$productId]);
+                    $_SESSION['carrito_message'] = 'El producto ya no está disponible.';
+                } elseif ($cart[$productId] > $product->getStock()) {
+                    $cart[$productId] = $product->getStock();
+                    $_SESSION['carrito_message'] = 'La cantidad se ajustó al stock disponible.';
+                } else {
+                    $_SESSION['carrito_message'] = 'Cantidad reducida correctamente.';
+                }
             }
+        } else {
+            $_SESSION['carrito_message'] = 'Producto no encontrado en el carrito.';
         }
 
         $this->setCart($cart);
         header('Location: ' . BASE_URL . 'carrito');
-        exit;
     }
+
+
+    //eliminar una linea de pedido completa del carrito
 
     public function remove(int $productId): void
     {
@@ -216,15 +216,15 @@ class CarritoController
         }
 
         header('Location: ' . BASE_URL . 'carrito');
-        exit;
     }
 
+
+    //vaciar carrito
     public function empty(): void
     {
         unset($_SESSION['carrito']);
         $_SESSION['carrito_message'] = 'El carrito ha sido vaciado.';
         header('Location: ' . BASE_URL . 'carrito');
-        exit;
     }
 
     public function confirm(): void
@@ -234,16 +234,11 @@ class CarritoController
         if (empty($cart)) {
             $_SESSION['carrito_message'] = 'El carrito está vacío.';
             header('Location: ' . BASE_URL . 'carrito');
-            exit;
-        }
-
-        if (!isset($_SESSION['identity'])) {
+        } elseif (!isset($_SESSION['identity'])) {
             $_SESSION['cart_redirect'] = BASE_URL . 'pedido/nuevo';
             header('Location: ' . BASE_URL . 'auth/login');
-            exit;
+        } else {
+            header('Location: ' . BASE_URL . 'pedido/nuevo');
         }
-
-        header('Location: ' . BASE_URL . 'pedido/nuevo');
-        exit;
     }
 }

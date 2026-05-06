@@ -1,8 +1,6 @@
 <?php
 namespace NextLevelHub\Core;
 
-
-
 use NextLevelHub\Controllers\ErrorController;
 
 class Router {

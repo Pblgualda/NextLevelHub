@@ -59,7 +59,7 @@ class ProductoController
             if (!$producto) {
                 $_SESSION['errors'] = ['Producto no encontrado.'];
                 header('Location: ' . BASE_URL . 'producto/gestion');
-                exit;
+                return;
             }
             $data = [
                 'categoria_id' => $producto->getCategoriaId(),
@@ -106,7 +106,7 @@ class ProductoController
                 $this->service->save($producto);
                 $_SESSION['product_save'] = 'complete';
                 header('Location: ' . BASE_URL . 'producto/gestion');
-                exit;
+                return;
             }
         }
 
@@ -124,19 +124,16 @@ class ProductoController
     public function eliminar(int $id): void
     {
         AdminMiddleware::handle();
-        if ($id <= 0) {
+        if ($id > 0) {
+            try {
+                $this->service->delete($id);
+                $_SESSION['product_delete'] = 'complete';
+            } catch (RuntimeException $e) {
+                $_SESSION['errors'] = [$e->getMessage()];
+            }
+        } else {
             $_SESSION['errors'] = ['ID de producto inválido.'];
-            header('Location: ' . BASE_URL . 'producto/gestion');
-            exit;
-        }
-
-        try {
-            $this->service->delete($id);
-            $_SESSION['product_delete'] = 'complete';
-        } catch (RuntimeException $e) {
-            $_SESSION['errors'] = [$e->getMessage()];
         }
         header('Location: ' . BASE_URL . 'producto/gestion');
-        exit;
     }
 }

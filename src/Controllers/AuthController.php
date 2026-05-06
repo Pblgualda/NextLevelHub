@@ -40,7 +40,6 @@ class AuthController
         $client = $this->createGoogleClient();
         $authUrl = $client->createAuthUrl();
         header('Location: ' . filter_var($authUrl, FILTER_SANITIZE_URL));
-        exit;
     }
 
     public function googleCallback(): void
@@ -48,7 +47,7 @@ class AuthController
         if (!isset($_GET['code'])) {
             $_SESSION['errors'] = ['No se recibió el código de autorización de Google.'];
             header('Location: ' . BASE_URL . 'auth/login');
-            exit;
+            return;
         }
 
         $client = $this->createGoogleClient();
@@ -57,14 +56,14 @@ class AuthController
         if (isset($token['error'])) {
             $_SESSION['errors'] = ['Error en la autenticación con Google: ' . htmlspecialchars($token['error_description'] ?? $token['error'])];
             header('Location: ' . BASE_URL . 'auth/login');
-            exit;
+            return;
         }
 
         $payload = $client->verifyIdToken($token['id_token']);
         if (!$payload || !isset($payload['email'])) {
             $_SESSION['errors'] = ['No se pudo verificar el usuario de Google.'];
             header('Location: ' . BASE_URL . 'auth/login');
-            exit;
+            return;
         }
 
         $email = $payload['email'];
@@ -81,7 +80,7 @@ class AuthController
         if (!$usuario) {
             $_SESSION['errors'] = ['No se pudo iniciar sesión con Google.'];
             header('Location: ' . BASE_URL . 'auth/login');
-            exit;
+            return;
         }
 
         $_SESSION['identity'] = [
@@ -96,11 +95,10 @@ class AuthController
         if ($redirect) {
             unset($_SESSION['cart_redirect']);
             header('Location: ' . $redirect);
-            exit;
+            return;
         }
 
         header('Location: ' . BASE_URL);
-        exit;
     }
 
     private function createGoogleClient(): GoogleClient
@@ -120,7 +118,7 @@ class AuthController
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . BASE_URL . 'auth/login');
-            exit;
+            return;
         }
 
         $loginRequest = new LoginRequest($_POST);
@@ -128,7 +126,7 @@ class AuthController
         if (!$loginRequest->validate()) {
             $_SESSION['errors'] = $loginRequest->getErrors();
             header('Location: ' . BASE_URL . 'auth/login');
-            exit;
+            return;
         }
 
         $data = $loginRequest->getData();
@@ -147,15 +145,13 @@ class AuthController
             if ($redirect) {
                 unset($_SESSION['cart_redirect']);
                 header('Location: ' . $redirect);
-                exit;
+                return;
             }
 
             header('Location: ' . BASE_URL);
-            exit;
         } catch (\Throwable $e) {
             $_SESSION['errors'] = [$e->getMessage()];
             header('Location: ' . BASE_URL . 'auth/login');
-            exit;
         }
     }
 
@@ -167,7 +163,7 @@ class AuthController
         // Solo procesar peticiones POST
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . BASE_URL . 'auth/register');
-            exit;
+            return;
         }
 
         // Crear instancia de UserRequest y validar los datos
@@ -177,7 +173,7 @@ class AuthController
             // Si hay errores, guardarlos en sesión
             $_SESSION['errors'] = $userRequest->getErrors();
             header('Location: ' . BASE_URL . 'auth/register');
-            exit;
+            return;
         }
 
         // Obtener los datos sanitizados
@@ -198,20 +194,17 @@ class AuthController
                 if ($redirect) {
                     unset($_SESSION['cart_redirect']);
                     header('Location: ' . $redirect);
-                    exit;
+                    return;
                 }
 
                 header('Location: ' . BASE_URL);
-                exit;
             } else {
                 $_SESSION['errors'] = ['Error al registrar el usuario. Intenta más tarde.'];
                 header('Location: ' . BASE_URL . 'auth/register');
-                exit;
             }
         } catch (\Exception $e) {
             $_SESSION['errors'] = [$e->getMessage()];
             header('Location: ' . BASE_URL . 'auth/register');
-            exit;
         }
     }
 
@@ -220,20 +213,18 @@ class AuthController
         unset($_SESSION['identity']);
         session_destroy();
         header('Location: ' . BASE_URL);
-        exit;
     }
 
     public function profile(): void
     {
         $identity = $_SESSION['identity'] ?? null;
 
-        if (!$identity) {
+        if ($identity) {
+            $this->pages->render('auth/profile', [
+                'identity' => $identity,
+            ]);
+        } else {
             header('Location: ' . BASE_URL . 'auth/login');
-            exit;
         }
-
-        $this->pages->render('auth/profile', [
-            'identity' => $identity,
-        ]);
     }
 }

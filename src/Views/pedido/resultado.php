@@ -46,6 +46,17 @@
             <p class="email-info">
                 <?= isset($emailSent) && $emailSent ? 'Se ha enviado un correo de confirmación a tu email.' : 'No se ha podido enviar el correo de confirmación.' ?>
             </p>
+
+            <?php if (!empty($facturaPdf['url'])): ?>
+                <p class="factura-info">Tu factura PDF ya estÃ¡ disponible.</p>
+                <a class="btn btn-factura" href="<?= htmlspecialchars($facturaPdf['url']) ?>" target="_blank" rel="noopener">
+                    Descargar factura PDF
+                </a>
+            <?php elseif (!empty($facturaError)): ?>
+                <p class="factura-error">
+                    El pedido se confirmÃ³, pero no se pudo generar la factura PDF: <?= htmlspecialchars($facturaError) ?>
+                </p>
+            <?php endif; ?>
         <?php endif; ?>
 
         <a class="btn" href="<?= BASE_URL ?>">Volver al inicio</a>
@@ -83,6 +94,17 @@
         font-weight: 600;
     }
 
+    .factura-info {
+        margin: 16px 0 8px;
+        font-weight: 600;
+    }
+
+    .factura-error {
+        margin-top: 16px;
+        color: #b00020;
+        font-weight: 600;
+    }
+
     .btn {
         display: inline-block;
         padding: 12px 18px;
@@ -90,5 +112,10 @@
         color: #fff;
         border-radius: 8px;
         text-decoration: none;
+    }
+
+    .btn-factura {
+        margin-right: 10px;
+        background: #198754;
     }
 </style>

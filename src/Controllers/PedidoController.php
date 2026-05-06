@@ -32,7 +32,7 @@ class PedidoController
         if (!$identity) {
             $_SESSION['errors'] = ['Debes iniciar sesión para ver tus pedidos.'];
             header('Location: ' . BASE_URL . 'auth/login');
-            exit;
+            return;
         }
 
         $pedidos = $this->service->findOrdersByUsuarioId((int)$identity['id']);
@@ -47,14 +47,14 @@ class PedidoController
         if (!$identity) {
             $_SESSION['errors'] = ['Debes iniciar sesión para ver el pedido.'];
             header('Location: ' . BASE_URL . 'auth/login');
-            exit;
+            return;
         }
 
         $pedido = $this->service->findPedidoForUsuario($id, (int)$identity['id']);
         if (!$pedido) {
             $_SESSION['errors'] = ['Pedido no encontrado o no autorizado.'];
             header('Location: ' . BASE_URL . 'pedido/mis-pedidos');
-            exit;
+            return;
         }
 
         $lineas = $this->service->findLineasByPedidoId($pedido->getId());
@@ -70,14 +70,14 @@ class PedidoController
         if (!$identity) {
             $_SESSION['errors'] = ['Debes iniciar sesión para completar el pedido.'];
             header('Location: ' . BASE_URL . 'auth/login');
-            exit;
+            return;
         }
 
         $cart = $_SESSION['carrito'] ?? [];
         if (empty($cart)) {
             $_SESSION['errors'] = ['El carrito está vacío.'];
             header('Location: ' . BASE_URL . 'carrito');
-            exit;
+            return;
         }
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -134,6 +134,8 @@ class PedidoController
                 'pedido' => $result['pedido'],
                 'items' => $result['items'],
                 'emailSent' => $result['emailSent'],
+                'facturaPdf' => $result['facturaPdf'] ?? null,
+                'facturaError' => $result['facturaError'] ?? null,
             ]);
         } catch (\Throwable $e) {
             $errors[] = $e->getMessage();

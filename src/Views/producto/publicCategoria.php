@@ -36,6 +36,5 @@
 
     <div class="public-category-actions">
         <a class="btn" href="<?= BASE_URL ?>">Volver al inicio</a>
-        <a class="btn-secondary" href="<?= BASE_URL ?>categoria/listar">Ver categorías</a>
     </div>
 </main>

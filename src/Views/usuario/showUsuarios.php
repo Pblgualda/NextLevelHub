@@ -1,4 +1,7 @@
 <?php
+//vista de todos los usuarios desde un admin
+
+
 $usuarios = $usuarios ?? [];
 ?>
 <div class="container-user-list">

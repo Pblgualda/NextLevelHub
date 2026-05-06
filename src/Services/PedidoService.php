@@ -7,6 +7,7 @@ use NextLevelHub\Models\Pedido;
 use NextLevelHub\Repositories\LineaPedidoRepository;
 use NextLevelHub\Repositories\PedidoRepository;
 use NextLevelHub\Repositories\ProductoRepository;
+use NextLevelHub\Repositories\UsuarioRepository;
 use RuntimeException;
 
 class PedidoService
@@ -15,7 +16,9 @@ class PedidoService
     private PedidoRepository $pedidoRepository;
     private LineaPedidoRepository $lineaRepository;
     private ProductoRepository $productoRepository;
+    private UsuarioRepository $usuarioRepository;
     private EmailService $emailService;
+    private FacturaPdfService $facturaPdfService;
     private const IVA_RATE = 0.21;
 
     public function __construct(BaseDatos $db)
@@ -24,7 +27,9 @@ class PedidoService
         $this->pedidoRepository = new PedidoRepository($db);
         $this->lineaRepository = new LineaPedidoRepository($db);
         $this->productoRepository = new ProductoRepository($db);
+        $this->usuarioRepository = new UsuarioRepository($db);
         $this->emailService = new EmailService($db);
+        $this->facturaPdfService = new FacturaPdfService();
     }
 
     public function findAll(): array
@@ -139,11 +144,22 @@ class PedidoService
 
             $this->db->confirmar();
             $emailSent = $this->emailService->sendOrderConfirmation($pedido, $items, $email);
+            $facturaPdf = null;
+            $facturaError = null;
+
+            try {
+                $usuario = $this->usuarioRepository->findById($usuarioId);
+                $facturaPdf = $this->facturaPdfService->generate($pedido, $items, $usuario);
+            } catch (\Throwable $pdfError) {
+                $facturaError = $pdfError->getMessage();
+            }
 
             return [
                 'pedido' => $pedido,
                 'items' => $items,
                 'emailSent' => $emailSent,
+                'facturaPdf' => $facturaPdf,
+                'facturaError' => $facturaError,
             ];
         } catch (\Throwable $e) {
             $this->db->revertir();
