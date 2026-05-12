@@ -20,6 +20,11 @@ class CategoriaService
         return $this->repository->findAll() ?? [];
     }
 
+    public function findAllR(): array
+    {
+        return $this->repository->findAllR() ?? [];
+    }
+
     public function findById(int $id): ?Categoria
     {
         return $this->repository->findById($id);

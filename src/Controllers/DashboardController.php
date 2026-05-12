@@ -18,7 +18,7 @@ class DashboardController
     }
 
     public function index():void{
-        $categorias = $this->categoriaService->findAll();
+        $categorias = $this->categoriaService->findAllR();
         $this->pages->render("dashboard/index", [
             'categorias' => $categorias,
         ]);

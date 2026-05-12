@@ -40,7 +40,7 @@ class EmailService
 
             // Contenido del correo
             $mail->isHTML(true);
-            $mail->Subject = 'Confirmación de Pedido - NextLevelHub';
+            $mail->Subject = 'Confirmacion de Pedido - NextLevelHub';
 
             // Obtener datos del usuario
             $usuario = $this->usuarioRepository->findById($pedido->getUsuarioId());

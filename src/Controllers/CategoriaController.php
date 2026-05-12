@@ -30,6 +30,14 @@ class CategoriaController
         ]);
     }
 
+    public function listarP(): void
+    {
+        $categorias = $this->service->findAllR();
+        $this->pages->render('categoria/showCategorias', [
+            'categorias' => $categorias
+        ]);
+    }
+
     public function form(?int $id = null): void
     {
         $categoria = null;

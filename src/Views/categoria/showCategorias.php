@@ -31,7 +31,7 @@ $categorias = $categorias ?? [];
                         <td><?= htmlspecialchars($categoria->getCreated()) ?></td>
                         <td>
                             <a class="action-link" href="<?= BASE_URL ?>categoria/form/<?= (int)$categoria->getId() ?>">Editar</a>
-                            <a class="action-link danger" href="<?= BASE_URL ?>categoria/eliminar/<?= (int)$categoria->getId() ?>">Eliminar</a>
+                            <!--<a class="action-link danger" href="<?= BASE_URL ?>categoria/eliminar/<?= (int)$categoria->getId() ?>">Eliminar</a>-->
                         </td>
                     </tr>
                 <?php endforeach; ?>

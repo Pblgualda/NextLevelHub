@@ -52,7 +52,7 @@
         </table>
 
         <div class="cart-buttons">
-            <a class="btn" href="<?= BASE_URL ?>carrito/empty">Vaciar carrito</a>
+            <a class="btn" href="<?= BASE_URL ?>carrito/vaciar">Vaciar carrito</a>
             <a class="btn btn-primary" href="<?= BASE_URL ?>carrito/confirm">Finalizar pedido</a>
         </div>
     <?php else: ?>

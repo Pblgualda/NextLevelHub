@@ -35,6 +35,10 @@ class ProductoRequest
         if ($precio === false || $precio <= 0) {
             $this->errors[] = 'El precio debe ser un número válido mayor que cero.';
         }
+        $precio = isset($this->data['precio']) ? filter_var($this->data['precio'], FILTER_VALIDATE_FLOAT) : false;
+        if ($precio >= 500) {
+            $this->errors[] = 'El precio no puede ser mayor de 500.';
+        }
         $this->data['precio'] = $precio !== false ? (float)$precio : 0.0;
 
         $stock = isset($this->data['stock']) ? filter_var($this->data['stock'], FILTER_VALIDATE_INT) : false;

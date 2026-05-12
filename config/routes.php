@@ -141,7 +141,7 @@ Router::add('GET', '/carrito/remove/:id', static function($id) {
 });
 
 Router::add('GET', '/carrito/vaciar', static function() {
-    (new CarritoController())->empty();
+    (new CarritoController())->vaciar();
 });
 
 Router::add('GET', '/carrito/confirm', static function() {

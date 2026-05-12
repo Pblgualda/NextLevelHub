@@ -48,7 +48,7 @@
             </p>
 
             <?php if (!empty($facturaPdf['url'])): ?>
-                <p class="factura-info">Tu factura PDF ya estÃ¡ disponible.</p>
+                <p class="factura-info">Tu factura PDF ya esta disponible.</p>
                 <a class="btn btn-factura" href="<?= htmlspecialchars($facturaPdf['url']) ?>" target="_blank" rel="noopener">
                     Descargar factura PDF
                 </a>

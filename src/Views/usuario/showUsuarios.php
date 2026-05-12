@@ -31,7 +31,7 @@ $usuarios = $usuarios ?? [];
                         <td><?= htmlspecialchars($usuario->getRol()) ?></td>
                         <td>
                             <a class="action-link" href="<?= BASE_URL ?>usuario/form/<?= (int)$usuario->getId() ?>">Editar</a>
-                            <a class="action-link danger" href="<?= BASE_URL ?>usuario/eliminar/<?= (int)$usuario->getId() ?>">Eliminar</a>
+                            <!--<a class="action-link danger" href="<?= BASE_URL ?>usuario/eliminar/<?= (int)$usuario->getId() ?>">Eliminar</a>-->
                         </td>
                     </tr>
                 <?php endforeach; ?>

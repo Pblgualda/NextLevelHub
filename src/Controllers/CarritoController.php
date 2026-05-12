@@ -220,11 +220,12 @@ class CarritoController
 
 
     //vaciar carrito
-    public function empty(): void
+    public function vaciar(): void
     {
         unset($_SESSION['carrito']);
         $_SESSION['carrito_message'] = 'El carrito ha sido vaciado.';
         header('Location: ' . BASE_URL . 'carrito');
+        exit;
     }
 
     public function confirm(): void

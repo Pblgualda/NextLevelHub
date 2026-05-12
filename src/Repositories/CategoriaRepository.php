@@ -33,6 +33,26 @@ class CategoriaRepository
         }
     }
 
+    public function findAllR(): array
+    {
+        try {
+            $sql = "SELECT DISTINCT categorias.* FROM categorias INNER JOIN productos ON categorias.id = productos.categoria_id";
+            $this->conexion->ejecutar($sql);
+
+            $categorias = [];
+            foreach ($this->conexion->extraer_todos() as $fila) {
+                $categorias[] = Categoria::fromArray($fila);
+            }
+            return $categorias;
+
+        } catch (PDOException $e) {
+            throw new RuntimeException(
+                "Error al obtener las categorías: {$e->getMessage()}",
+                previous: $e
+            );
+        }
+    }
+
     public function findById(int $id): ?Categoria
     {
         try {

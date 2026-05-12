@@ -1,0 +1,58 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 1125 >>
+stream
+BT /F1 20 Tf 50 795 Td (NextLevelHub) Tj ET
+BT /F1 22 Tf 390 797 Td (FACTURA) Tj ET
+BT /F1 10 Tf 390 772 Td (Factura: F-000019) Tj ET
+BT /F1 10 Tf 390 756 Td (Fecha: 2026-05-07 10:04:34) Tj ET
+50 738 m 545 738 l S
+BT /F1 13 Tf 50 712 Td (Cliente) Tj ET
+BT /F1 10 Tf 50 694 Td (Manolete Pies de plata) Tj ET
+BT /F1 10 Tf 50 678 Td (calixtopinarmanuel@gmail.com) Tj ET
+BT /F1 10 Tf 50 662 Td (Direccion: Camino de la vida) Tj ET
+BT /F1 10 Tf 50 646 Td (Granada, Granada) Tj ET
+BT /F1 10 Tf 50 607 Td (Producto) Tj ET
+BT /F1 10 Tf 300 607 Td (Precio) Tj ET
+BT /F1 10 Tf 380 607 Td (Cantidad) Tj ET
+BT /F1 10 Tf 470 607 Td (Subtotal) Tj ET
+50 598 m 545 598 l S
+BT /F1 10 Tf 50 578 Td (Manzanita) Tj ET
+BT /F1 10 Tf 300 578 Td (8,00 EUR) Tj ET
+BT /F1 10 Tf 395 578 Td (4) Tj ET
+BT /F1 10 Tf 470 578 Td (32,00 EUR) Tj ET
+350 150 m 545 150 l S
+BT /F1 10 Tf 370 130 Td (Subtotal:) Tj ET
+BT /F1 10 Tf 470 130 Td (32,00 EUR) Tj ET
+BT /F1 10 Tf 370 112 Td (IVA 21%:) Tj ET
+BT /F1 10 Tf 470 112 Td (6,72 EUR) Tj ET
+BT /F1 13 Tf 370 90 Td (Total:) Tj ET
+BT /F1 13 Tf 470 90 Td (38,72 EUR) Tj ET
+BT /F1 9 Tf 50 40 Td (Pagina 1 de 1) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000001417 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1487
+%%EOF

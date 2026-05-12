@@ -46,7 +46,7 @@
                         <td><?= htmlspecialchars($producto->getCategoriaNombre() ?: $producto->getCategoriaId()); ?></td>
                         <td>
                             <a class="action-link" href="<?= BASE_URL ?>producto/form/<?= (int)$producto->getId(); ?>">Editar</a>
-                            <a class="action-link danger" href="<?= BASE_URL ?>producto/eliminar/<?= (int)$producto->getId(); ?>">Eliminar</a>
+                            <!--<a class="action-link danger" href="<?= BASE_URL ?>producto/eliminar/<?= (int)$producto->getId(); ?>">Eliminar</a>-->
                         </td>
                     </tr>
                 <?php endforeach; ?>
