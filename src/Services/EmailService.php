@@ -20,7 +20,7 @@ class EmailService
         $this->usuarioRepository = new UsuarioRepository($db);
     }
 
-    public function sendOrderConfirmation(Pedido $pedido, array $carrito, string $email): bool
+    public function sendOrderConfirmation(Pedido $pedido, array $carrito, string $email, ?string $facturaPath = null): bool
     {
         try {
             $mail = new PHPMailer(true);
@@ -48,7 +48,12 @@ class EmailService
 
             // Generar el cuerpo del correo
             $mail->Body = $this->generateOrderEmailBody($pedido, $carrito, $nombreCliente);
-
+            if ($facturaPath && file_exists($facturaPath)) {
+                $mail->addAttachment(
+                    $facturaPath,
+                    'factura-pedido-' . $pedido->getId() . '.pdf'
+                );
+            }
             $mail->send();
             return true;
         } catch (Exception $e) {

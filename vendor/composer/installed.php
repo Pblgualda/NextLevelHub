@@ -3,7 +3,7 @@
         'name' => 'pablo/nextlevelhub',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '3830eab50460641bed89c001dbd9113352081be0',
+        'reference' => '0a4beb47c391283f46c3e1c6abe411f1fd7ffadb',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -112,7 +112,7 @@
         'pablo/nextlevelhub' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '3830eab50460641bed89c001dbd9113352081be0',
+            'reference' => '0a4beb47c391283f46c3e1c6abe411f1fd7ffadb',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

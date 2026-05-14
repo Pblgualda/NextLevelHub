@@ -61,6 +61,7 @@ class UsuarioService
             throw new \Exception('El email ya está registrado en el sistema.');
         }
 
+
         // Crear instancia del modelo Usuario
         $usuario = new Usuario(
             nombre: $nombre,

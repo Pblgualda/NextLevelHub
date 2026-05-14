@@ -204,6 +204,11 @@ Router::add('GET', '/pedido/ver/:id', static function($id) {
     (new PedidoController())->verPedido((int)$id);
 });
 
+Router::add('GET', '/pedido/listar', static function(){
+    AdminMiddleware::handle();
+    (new PedidoController())->listar();
+});
+
 // Ruta para nuevo contacto
 // Router::add('GET', '/Contacto/nuevoContacto', static function() {
 //     (new ContactoController())->nuevoContacto();

@@ -24,6 +24,7 @@ $identity = $identity ?? $_SESSION['identity'] ?? null;
                     <a class="btn" href="<?= BASE_URL ?>categoria/listar">Gestionar categorías</a>
                     <a class="btn" href="<?= BASE_URL ?>usuario/nuevo">Crear usuario</a>
                     <a class="btn" href="<?= BASE_URL ?>usuario/lista">Ver usuarios</a>
+                    <a class="btn" href="<?= BASE_URL ?>pedido/listar">Ver todos los pedidos</a>
                 </div>
             </section>
         <?php endif; ?>

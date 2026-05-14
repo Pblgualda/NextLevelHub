@@ -143,7 +143,6 @@ class PedidoService
             }
 
             $this->db->confirmar();
-            $emailSent = $this->emailService->sendOrderConfirmation($pedido, $items, $email);
             $facturaPdf = null;
             $facturaError = null;
 
@@ -153,6 +152,8 @@ class PedidoService
             } catch (\Throwable $pdfError) {
                 $facturaError = $pdfError->getMessage();
             }
+
+            $emailSent = $this->emailService->sendOrderConfirmation($pedido, $items, $email, $facturaPdf['path'] ?? null );
 
             return [
                 'pedido' => $pedido,
