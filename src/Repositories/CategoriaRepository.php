@@ -88,6 +88,21 @@ class CategoriaRepository
         }
     }
 
+    public function hasProducts(int $categoriaId): bool
+    {
+        try {
+            $sql = "SELECT 1 FROM productos WHERE categoria_id = :categoria_id LIMIT 1";
+            $this->conexion->ejecutar($sql, [':categoria_id' => ['valor' => $categoriaId]]);
+            $fila = $this->conexion->extraer_registro();
+            return $fila !== false;
+        } catch (PDOException $e) {
+            throw new RuntimeException(
+                "Error al verificar si la categoría tiene productos: {$e->getMessage()}",
+                previous: $e
+            );
+        }
+    }
+
     public function delete(int $id): bool
     {
         try {

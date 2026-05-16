@@ -9,6 +9,20 @@ $categorias = $categorias ?? [];
         <a class="btn-secondary" href="<?= BASE_URL ?>auth/profile">Volver al perfil</a>
     </div>
 
+    <?php if (!empty($_SESSION['errors'])): ?>
+        <div class="error-message">
+            <?php foreach ($_SESSION['errors'] as $error): ?>
+                <p><?= htmlspecialchars($error) ?></p>
+            <?php endforeach; ?>
+        </div>
+        <?php unset($_SESSION['errors']); ?>
+    <?php endif; ?>
+
+    <?php if (!empty($_SESSION['categoria_delete'])): ?>
+        <div class="success-message">Categoría eliminada correctamente.</div>
+        <?php unset($_SESSION['categoria_delete']); ?>
+    <?php endif; ?>
+
     <?php if (empty($categorias)): ?>
         <p>No hay categorías registradas.</p>
     <?php else: ?>
@@ -31,7 +45,7 @@ $categorias = $categorias ?? [];
                         <td><?= htmlspecialchars($categoria->getCreated()) ?></td>
                         <td>
                             <a class="action-link" href="<?= BASE_URL ?>categoria/form/<?= (int)$categoria->getId() ?>">Editar</a>
-                            <!--<a class="action-link danger" href="<?= BASE_URL ?>categoria/eliminar/<?= (int)$categoria->getId() ?>">Eliminar</a>-->
+                            <a class="action-link danger" href="<?= BASE_URL ?>categoria/eliminar/<?= (int)$categoria->getId() ?>" onclick="return confirm('¿Seguro que deseas eliminar esta categoría?');">Eliminar</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

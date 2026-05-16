@@ -103,8 +103,19 @@ class CategoriaController
             exit;
         }
 
-        $this->service->delete($id);
-        $_SESSION['categoria_delete'] = 'complete';
+        if ($this->service->hasProducts($id)) {
+            $_SESSION['errors'] = ['No se puede eliminar esta categoría porque tiene productos asociados.'];
+            header('Location: ' . BASE_URL . 'categoria/listar');
+            exit;
+        }
+
+        try {
+            $this->service->delete($id);
+            $_SESSION['categoria_delete'] = 'complete';
+        } catch (\RuntimeException $e) {
+            $_SESSION['errors'] = ["Error al eliminar la categoría: {$e->getMessage()}"];
+        }
+
         header('Location: ' . BASE_URL . 'categoria/listar');
         exit;
     }

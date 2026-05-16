@@ -111,11 +111,28 @@ class ProductoRepository
     public function delete(int $id): bool
     {
         try {
-            $sql = "DELETE FROM productos WHERE id = :id";
-            return $this->conexion->ejecutar($sql, [':id' => ['valor' => $id]]);
+            $sql = "UPDATE productos SET
+            activo = :activo
+            WHERE id = :id";
+            return $this->conexion->ejecutar($sql, [':id' => ['valor' => $id], ':activo' => ['valor' => 0]]);
         } catch (PDOException $e) {
             throw new RuntimeException(
-                "Error al eliminar el producto: {$e->getMessage()}",
+                "Error al descatalogar el producto: {$e->getMessage()}",
+                previous: $e
+            );
+        }
+    }
+
+    public function activate(int $id): bool
+    {
+        try {
+            $sql = "UPDATE productos SET
+            activo = :activo
+            WHERE id = :id";
+            return $this->conexion->ejecutar($sql, [':id' => ['valor' => $id], ':activo' => ['valor' => 1]]);
+        } catch (PDOException $e) {
+            throw new RuntimeException(
+                "Error al catalogar el producto: {$e->getMessage()}",
                 previous: $e
             );
         }
@@ -185,4 +202,6 @@ class ProductoRepository
             ':updated_at'     => $producto->getUpdatedAt(),
         ]);
     }
+
+
 }

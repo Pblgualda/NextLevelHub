@@ -6,14 +6,22 @@ namespace NextLevelHub\Services;
 use NextLevelHub\Models\Usuario;
 use NextLevelHub\Core\BaseDatos;
 use NextLevelHub\Repositories\UsuarioRepository;
+use NextLevelHub\Repositories\PedidoRepository;
+use NextLevelHub\Repositories\LineaPedidoRepository;
 
 class UsuarioService
 {
+    private BaseDatos $db;
     private UsuarioRepository $repository;
+    private PedidoRepository $pedidoRepository;
+    private LineaPedidoRepository $lineaPedidoRepository;
 
     public function __construct(BaseDatos $db)
     {
+        $this->db = $db;
         $this->repository = new UsuarioRepository($db);
+        $this->pedidoRepository = new PedidoRepository($db);
+        $this->lineaPedidoRepository = new LineaPedidoRepository($db);
     }
 
     public function findAll(): array
@@ -36,9 +44,40 @@ class UsuarioService
         return $this->repository->update($usuario);
     }
 
+    public function hasPedidos(int $usuarioId): bool
+    {
+        return $this->repository->hasPedidos($usuarioId);
+    }
+
     public function delete(int $id): bool
     {
-        return $this->repository->delete($id);
+        if ($id <= 0) {
+            return false;
+        }
+
+        try {
+            $this->db->iniciarTransaccion();
+
+            $pedidos = $this->pedidoRepository->findByUsuarioId($id);
+            foreach ($pedidos as $pedido) {
+                $pedidoId = $pedido->getId();
+                if ($pedidoId > 0) {
+                    $this->lineaPedidoRepository->deleteByPedidoId($pedidoId);
+                }
+            }
+
+            $this->pedidoRepository->deleteByUsuarioId($id);
+            $this->repository->delete($id);
+
+            $this->db->confirmar();
+            return true;
+        } catch (\Throwable $e) {
+            $this->db->revertir();
+            throw new \RuntimeException(
+                "Error al eliminar el usuario y sus pedidos relacionados: {$e->getMessage()}",
+                previous: $e
+            );
+        }
     }
 
     /**
@@ -61,6 +100,8 @@ class UsuarioService
             throw new \Exception('El email ya está registrado en el sistema.');
         }
 
+        $token = bin2hex(random_bytes(32));
+        $tokenExpiration = date('Y-m-d H:i:s', strtotime('+1 hour'));
 
         // Crear instancia del modelo Usuario
         $usuario = new Usuario(
@@ -70,6 +111,8 @@ class UsuarioService
             password: password_hash($password, PASSWORD_BCRYPT),
             rol: 'usuario',
             confirmado: false,
+            token: $token,
+            token_exp: $tokenExpiration,
             created_at: date('Y-m-d H:i:s'),
             updated_at: date('Y-m-d H:i:s')
         );

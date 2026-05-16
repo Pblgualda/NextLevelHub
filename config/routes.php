@@ -116,6 +116,11 @@ Router::add('GET', '/producto/eliminar/:id', static function($id) {
     (new ProductoController())->eliminar((int)$id);
 });
 
+Router::add('GET', '/producto/activar/:id', static function($id) {
+    AdminMiddleware::handle();
+    (new ProductoController())->activar((int)$id);
+});
+
 Router::add('GET', '/categoria/productos/:id', static function($id) {
     (new ProductoController())->productosPorCategoria((int)$id);
 });

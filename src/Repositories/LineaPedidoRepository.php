@@ -54,6 +54,19 @@ class LineaPedidoRepository
         }
     }
 
+    public function deleteByPedidoId(int $pedidoId): bool
+    {
+        try {
+            $sql = "DELETE FROM lineas_pedidos WHERE pedido_id = :pedido_id";
+            return $this->conexion->ejecutar($sql, [':pedido_id' => ['valor' => $pedidoId]]);
+        } catch (PDOException $e) {
+            throw new RuntimeException(
+                "Error al eliminar las líneas de pedido: {$e->getMessage()}",
+                previous: $e
+            );
+        }
+    }
+
     public function create(LineaPedido $lineaPedido): bool
     {
         try{

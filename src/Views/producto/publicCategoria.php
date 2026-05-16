@@ -8,6 +8,7 @@
     <?php if (!empty($productos)): ?>
         <div class="public-product-grid">
             <?php foreach ($productos as $producto): ?>
+                <?php if ($producto->getActivo()==1): ?>
                 <article class="product-card">
                     <?php if ($producto->getImagen()): ?>
                         <img src="<?= BASE_URL ?>uploads/images/<?= htmlspecialchars($producto->getImagen()) ?>" alt="<?= htmlspecialchars($producto->getNombre()) ?>">
@@ -28,6 +29,7 @@
                         <button type="submit" class="btn">Añadir al carrito</button>
                     </form>
                 </article>
+                <?php endif; ?>
             <?php endforeach; ?>
         </div>
     <?php else: ?>

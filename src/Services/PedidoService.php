@@ -52,6 +52,14 @@ class PedidoService
         return $this->lineaRepository->findByPedidoId($pedidoId) ?? [];
     }
 
+    public function findPedidoById(int $pedidoId): ?Pedido
+    {
+        return $this->pedidoRepository->findById($pedidoId);
+    }
+
+
+
+
     public function save(Pedido $pedido): bool
     {
         return $this->pedidoRepository->save($pedido);

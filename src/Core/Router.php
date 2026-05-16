@@ -38,9 +38,7 @@ class Router {
             // El '^' asegura que solo borre el nombre de la carpeta si está al principio de la URL
             $uri = preg_replace('#^' . preg_quote($scriptName, '#') . '#i', '', $uri);
         }*/
-
-
-
+        
         $uri = trim($uri, '/');
 
 

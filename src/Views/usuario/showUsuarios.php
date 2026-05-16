@@ -7,6 +7,20 @@ $usuarios = $usuarios ?? [];
 <div class="container-user-list">
     <h1>Lista de usuarios</h1>
 
+    <?php if (!empty($_SESSION['errors'])): ?>
+        <div class="error-message">
+            <?php foreach ($_SESSION['errors'] as $error): ?>
+                <p><?= htmlspecialchars($error) ?></p>
+            <?php endforeach; ?>
+        </div>
+        <?php unset($_SESSION['errors']); ?>
+    <?php endif; ?>
+
+    <?php if (!empty($_SESSION['user_delete'])): ?>
+        <div class="success-message">Usuario eliminado correctamente.</div>
+        <?php unset($_SESSION['user_delete']); ?>
+    <?php endif; ?>
+
     <?php if (empty($usuarios)): ?>
         <p>No hay usuarios registrados.</p>
     <?php else: ?>
@@ -31,7 +45,7 @@ $usuarios = $usuarios ?? [];
                         <td><?= htmlspecialchars($usuario->getRol()) ?></td>
                         <td>
                             <a class="action-link" href="<?= BASE_URL ?>usuario/form/<?= (int)$usuario->getId() ?>">Editar</a>
-                            <!--<a class="action-link danger" href="<?= BASE_URL ?>usuario/eliminar/<?= (int)$usuario->getId() ?>">Eliminar</a>-->
+                            <a class="action-link danger" href="<?= BASE_URL ?>usuario/eliminar/<?= (int)$usuario->getId() ?>" onclick="return confirm('¿Seguro que deseas eliminar este usuario?');">Eliminar</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

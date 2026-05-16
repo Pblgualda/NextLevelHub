@@ -63,6 +63,42 @@ class EmailService
         }
     }
 
+    public function sendRegistrationConfirmation(Usuario $usuario, string $email): bool
+    {
+        try {
+            $mail = new PHPMailer(true);
+            // Configuración del servidor SMTP
+            $mail->isSMTP();
+            $mail->Host = $_ENV['SMTP_HOST'];
+            $mail->SMTPAuth = true;
+            $mail->Username = $_ENV['SMTP_USER'];
+            $mail->Password = $_ENV['SMTP_PASS'];
+            $mail->SMTPSecure = $_ENV['SMTP_ENCRYPTION'] ?? 'tls';
+            $mail->Port = (int)($_ENV['SMTP_PORT'] ?? 587);
+
+            // Configuración del remitente
+            $mail->setFrom($_ENV['SMTP_USER'], 'NextLevelHub');
+            $mail->addAddress($email);
+
+            // Contenido del correo
+            $mail->isHTML(true);
+            $mail->Subject = 'Confirmacion de Registro - NextLevelHub';
+
+            // Obtener datos del usuario
+            $nombreCliente = $usuario ? $usuario->getNombre() . ' ' . $usuario->getApellidos() : 'Cliente';
+
+            // Generar el cuerpo del correo
+            $mail->Body = $this->generateRegistrationEmailBody($usuario);
+            $mail->send();
+            return true;
+        } catch (Exception $e) {
+            // Log the error or handle it
+            error_log("Error sending email: " . $mail->ErrorInfo);
+            return false;
+        }
+    }
+
+
     private function generateOrderEmailBody(Pedido $pedido, array $carrito, string $nombreCliente): string
     {
         $fechaPedido = $pedido->getFechaPedido() ?: date('Y-m-d H:i:s');
@@ -156,6 +192,63 @@ class EmailService
         </body>
         </html>';
 
+        return $html;
+    }
+
+    private function generateRegistrationEmailBody(Usuario $usuario): string
+    {
+        $html = '
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <title>Confirma tu cuenta</title>
+        </head>
+        <body style="font-family: Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 0;">
+            <div style="max-width: 600px; margin: 30px auto; background: #ffffff; padding: 30px; border-radius: 8px;">
+            <h1 style="color: #007bff; text-align: center;">NextLevelHub</h1>
+
+            <h2 style="color: #333;">Confirma tu cuenta</h2>
+
+            <p>Hola {{nombre}},</p>
+
+        <p>
+            Gracias por registrarte en <strong>NextLevelHub</strong>.
+            Para activar tu cuenta, confirma tu dirección de correo electrónico pulsando el siguiente botón:
+        </p>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="{{url_confirmacion}}"
+               style="background-color: #007bff; color: #ffffff; padding: 14px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+                Confirmar cuenta
+            </a>
+        </div>
+
+        <p>
+            Si el botón no funciona, copia y pega este enlace en tu navegador:
+        </p>
+
+        <p style="word-break: break-all; color: #555;">
+            {{url_confirmacion}}
+        </p>
+
+        <p>
+            Este enlace caducará en 24 horas.
+        </p>
+
+        <p>
+            Si no has creado una cuenta en NextLevelHub, puedes ignorar este mensaje.
+        </p>
+
+        <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
+
+        <p style="font-size: 13px; color: #777; text-align: center;">
+            © 2026 NextLevelHub. Todos los derechos reservados.
+        </p>
+    </div>
+</body>
+</html>
+        ';
         return $html;
     }
 }

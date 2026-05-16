@@ -50,12 +50,12 @@ class PedidoController
             return;
         }
 
-        $pedido = $this->service->findPedidoForUsuario($id, (int)$identity['id']);
-        if (!$pedido) {
-            $_SESSION['errors'] = ['Pedido no encontrado o no autorizado.'];
-            header('Location: ' . BASE_URL . 'pedido/mis-pedidos');
-            return;
-        }
+        $pedido = $this->service->findPedidoById($id);
+        //if (!$pedido) {
+        //    $_SESSION['errors'] = ['Pedido no encontrado o no autorizado.'];
+        //    header('Location: ' . BASE_URL . 'pedido/mis-pedidos');
+        //    return;
+        //}
 
         $lineas = $this->service->findLineasByPedidoId($pedido->getId());
         $this->pages->render('pedido/detalle', [

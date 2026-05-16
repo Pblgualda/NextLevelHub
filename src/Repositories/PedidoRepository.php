@@ -69,7 +69,36 @@ class PedidoRepository{
         }
     }
 
-    //findByID no implementado porque no se necesita en este proyecto, pero se podría implementar
+    public function findById(int $id): ?Pedido
+    {
+        try{
+            $sql = "Select * from pedidos WHERE id = :id LIMIT 1";
+            $this->conexion->ejecutar($sql, [
+                ':id' => ['valor' => $id]
+            ]);
+
+            $fila = $this->conexion->extraer_registro();
+            return $fila ? Pedido::fromArray($fila) : null;
+        }catch(PDOException $e){
+            throw new RuntimeException(
+                "Error al obtener el pedido: {$e->getMessage()}",
+                previous: $e
+            );
+        }
+    }
+
+    public function deleteByUsuarioId(int $usuarioId): bool
+    {
+        try {
+            $sql = "DELETE FROM pedidos WHERE usuario_id = :usuario_id";
+            return $this->conexion->ejecutar($sql, [':usuario_id' => ['valor' => $usuarioId]]);
+        } catch (PDOException $e) {
+            throw new RuntimeException(
+                "Error al eliminar los pedidos del usuario: {$e->getMessage()}",
+                previous: $e
+            );
+        }
+    }
 
     public function create(Pedido $pedido): bool
     {

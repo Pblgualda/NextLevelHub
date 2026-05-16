@@ -138,8 +138,13 @@ class UsuarioController
             exit;
         }
 
-        $this->service->delete($id);
-        $_SESSION['user_delete'] = 'complete';
+        try {
+            $this->service->delete($id);
+            $_SESSION['user_delete'] = 'complete';
+        } catch (\RuntimeException $e) {
+            $_SESSION['errors'] = ["Error al eliminar el usuario: {$e->getMessage()}"];
+        }
+
         header('Location: ' . BASE_URL . 'usuario/lista');
         exit;
     }

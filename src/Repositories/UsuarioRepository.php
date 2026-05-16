@@ -117,6 +117,21 @@ class UsuarioRepository
         }
     }
 
+    public function hasPedidos(int $usuarioId): bool
+    {
+        try {
+            $sql = "SELECT 1 FROM pedidos WHERE usuario_id = :usuario_id LIMIT 1";
+            $this->conexion->ejecutar($sql, [':usuario_id' => ['valor' => $usuarioId]]);
+            $fila = $this->conexion->extraer_registro();
+            return $fila !== false;
+        } catch (PDOException $e) {
+            throw new RuntimeException(
+                "Error al verificar si el usuario tiene pedidos: {$e->getMessage()}",
+                previous: $e
+            );
+        }
+    }
+
     public function delete(int $id): bool
     {
         try {

@@ -136,4 +136,20 @@ class ProductoController
         }
         header('Location: ' . BASE_URL . 'producto/gestion');
     }
+
+    public function activar(int $id)
+    {
+        AdminMiddleware::handle();
+        if ($id > 0) {
+            try {
+                $this->service->activar($id);
+                $_SESSION['product_activate'] = 'complete';
+            } catch (RuntimeException $e) {
+                $_SESSION['errors'] = [$e->getMessage()];
+            }
+        } else {
+            $_SESSION['errors'] = ['ID de producto inválido.'];
+        }
+        header('Location: ' . BASE_URL . 'producto/gestion');
+    }
 }

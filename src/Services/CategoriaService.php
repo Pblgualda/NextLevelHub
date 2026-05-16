@@ -40,6 +40,11 @@ class CategoriaService
         return $this->repository->save($categoria);
     }
 
+    public function hasProducts(int $categoriaId): bool
+    {
+        return $this->repository->hasProducts($categoriaId);
+    }
+
     public function delete(int $id): bool
     {
         return $this->repository->delete($id);

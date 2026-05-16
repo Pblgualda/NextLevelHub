@@ -43,10 +43,12 @@ class ProductoService
 
     public function delete(int $id): bool
     {
-        if ($this->repository->hasLineasPedido($id)) {
-            throw new RuntimeException("No se puede eliminar el producto porque está asociado a pedidos existentes.");
-        }
         return $this->repository->delete($id);
+    }
+
+    public function activar(int $id): bool
+    {
+        return $this->repository->activate($id);
     }
 
     public function processImageUpload(array $imageFile): ?string
@@ -81,4 +83,6 @@ class ProductoService
 
         return $name;
     }
+
+
 }

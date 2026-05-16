@@ -46,7 +46,11 @@
                         <td><?= htmlspecialchars($producto->getCategoriaNombre() ?: $producto->getCategoriaId()); ?></td>
                         <td>
                             <a class="action-link" href="<?= BASE_URL ?>producto/form/<?= (int)$producto->getId(); ?>">Editar</a>
-                            <!--<a class="action-link danger" href="<?= BASE_URL ?>producto/eliminar/<?= (int)$producto->getId(); ?>">Eliminar</a>-->
+                            <?php if ($producto->getActivo()==1): ?>
+                            <a class="action-link danger" href="<?= BASE_URL ?>producto/eliminar/<?= (int)$producto->getId(); ?>">Descatalogar</a>
+                            <?php else: ?>
+                            <a class="action-link danger" href="<?= BASE_URL ?>producto/activar/<?= (int)$producto->getId(); ?>">Activar</a>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
