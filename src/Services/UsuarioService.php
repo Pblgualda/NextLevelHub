@@ -34,6 +34,11 @@ class UsuarioService
         return $this->repository->findById($id);
     }
 
+    public function findByToken(string $token): ?Usuario
+    {
+        return $this->repository->findByToken($token);
+    }
+
     public function save(Usuario $usuario): bool
     {
         return $this->repository->save($usuario);
@@ -144,6 +149,40 @@ class UsuarioService
     public function findByEmail(string $email): ?Usuario
     {
         return $this->repository->findByEmail($email);
+    }
+
+    public function createPasswordResetToken(string $email): ?Usuario
+    {
+        $usuario = $this->repository->findByEmail($email);
+        if (!$usuario) {
+            return null;
+        }
+
+        $usuario->setToken(bin2hex(random_bytes(32)));
+        $usuario->setTokenExp(date('Y-m-d H:i:s', strtotime('+1 hour')));
+        $usuario->setUpdatedAt(date('Y-m-d H:i:s'));
+
+        $this->repository->save($usuario);
+        return $usuario;
+    }
+
+    public function resetPasswordWithToken(string $token, string $password): bool
+    {
+        $usuario = $this->repository->findByToken($token);
+        if (!$usuario) {
+            throw new \RuntimeException('El enlace de recuperacion no es valido.');
+        }
+
+        if ($usuario->getTokenExp() !== null && strtotime($usuario->getTokenExp()) < time()) {
+            throw new \RuntimeException('El enlace de recuperacion ha caducado. Solicita uno nuevo.');
+        }
+
+        $usuario->setPassword(password_hash($password, PASSWORD_BCRYPT));
+        $usuario->setToken(null);
+        $usuario->setTokenExp(null);
+        $usuario->setUpdatedAt(date('Y-m-d H:i:s'));
+
+        return $this->repository->save($usuario);
     }
 
     /**

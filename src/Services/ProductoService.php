@@ -26,6 +26,11 @@ class ProductoService
         return $this->repository->findByCategoria($categoriaId) ?? [];
     }
 
+    public function findFeatured(int $limit = 6): array
+    {
+        return $this->repository->findFeatured($limit) ?? [];
+    }
+
     public function findById(int $id): ?Producto
     {
         return $this->repository->findById($id);

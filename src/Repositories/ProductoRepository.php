@@ -56,6 +56,31 @@ class ProductoRepository
         }
     }
 
+    public function findFeatured(int $limit = 6): array
+    {
+        try {
+            $limit = max(1, min($limit, 12));
+            $sql = "SELECT p.*, c.nombre AS categoria_nombre FROM productos p
+                    LEFT JOIN categorias c ON p.categoria_id = c.id
+                    WHERE p.activo = 1
+                    ORDER BY p.created_at DESC, p.id DESC
+                    LIMIT :limit";
+            $this->conexion->ejecutar($sql, [':limit' => ['valor' => $limit]]);
+
+            $productos = [];
+            foreach ($this->conexion->extraer_todos() as $fila) {
+                $productos[] = Producto::fromArray($fila);
+            }
+            return $productos;
+
+        } catch (PDOException $e) {
+            throw new RuntimeException(
+                "Error al obtener productos destacados: {$e->getMessage()}",
+                previous: $e
+            );
+        }
+    }
+
     public function findById(int $id): ?Producto
     {
         try {

@@ -98,6 +98,32 @@ class EmailService
         }
     }
 
+    public function sendPasswordReset(Usuario $usuario, string $email): bool
+    {
+        try {
+            $mail = new PHPMailer(true);
+            $mail->isSMTP();
+            $mail->Host = $_ENV['SMTP_HOST'];
+            $mail->SMTPAuth = true;
+            $mail->Username = $_ENV['SMTP_USER'];
+            $mail->Password = $_ENV['SMTP_PASS'];
+            $mail->SMTPSecure = $_ENV['SMTP_ENCRYPTION'] ?? 'tls';
+            $mail->Port = (int)($_ENV['SMTP_PORT'] ?? 587);
+
+            $mail->setFrom($_ENV['SMTP_USER'], 'NextLevelHub');
+            $mail->addAddress($email);
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Recuperar contrasena - NextLevelHub';
+            $mail->Body = $this->generatePasswordResetEmailBody($usuario);
+            $mail->send();
+            return true;
+        } catch (Exception $e) {
+            error_log("Error sending email: " . $mail->ErrorInfo);
+            return false;
+        }
+    }
+
 
     private function generateOrderEmailBody(Pedido $pedido, array $carrito, string $nombreCliente): string
     {
@@ -197,6 +223,11 @@ class EmailService
 
     private function generateRegistrationEmailBody(Usuario $usuario): string
     {
+        $nombre = htmlspecialchars($usuario->getNombre(), ENT_QUOTES, 'UTF-8');
+
+        $urlConfirmacion = BASE_URL . 'auth/confirmar?token=' . urlencode($usuario->getToken());
+        $urlConfirmacionEscapada = htmlspecialchars($urlConfirmacion, ENT_QUOTES, 'UTF-8');
+
         $html = '
         <!DOCTYPE html>
         <html lang="es">
@@ -210,7 +241,7 @@ class EmailService
 
             <h2 style="color: #333;">Confirma tu cuenta</h2>
 
-            <p>Hola {{nombre}},</p>
+            <p>Hola '. $nombre . ',</p>
 
         <p>
             Gracias por registrarte en <strong>NextLevelHub</strong>.
@@ -218,7 +249,7 @@ class EmailService
         </p>
 
         <div style="text-align: center; margin: 30px 0;">
-            <a href="{{url_confirmacion}}"
+            <a href="' . $urlConfirmacionEscapada . '"
                style="background-color: #007bff; color: #ffffff; padding: 14px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">
                 Confirmar cuenta
             </a>
@@ -228,12 +259,12 @@ class EmailService
             Si el botón no funciona, copia y pega este enlace en tu navegador:
         </p>
 
-        <p style="word-break: break-all; color: #555;">
-            {{url_confirmacion}}
+        <p>
+            <a href="' . $urlConfirmacionEscapada . '">' . $urlConfirmacionEscapada . '</a>
         </p>
 
         <p>
-            Este enlace caducará en 24 horas.
+            Este enlace caducara en 1 hora.
         </p>
 
         <p>
@@ -250,5 +281,39 @@ class EmailService
 </html>
         ';
         return $html;
+    }
+
+    private function generatePasswordResetEmailBody(Usuario $usuario): string
+    {
+        $nombre = htmlspecialchars($usuario->getNombre(), ENT_QUOTES, 'UTF-8');
+        $urlReset = BASE_URL . 'auth/restablecer?token=' . urlencode($usuario->getToken());
+        $urlResetEscapada = htmlspecialchars($urlReset, ENT_QUOTES, 'UTF-8');
+
+        return '
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <title>Recuperar contrasena</title>
+        </head>
+        <body style="font-family: Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 0;">
+            <div style="max-width: 600px; margin: 30px auto; background: #ffffff; padding: 30px; border-radius: 8px;">
+                <h1 style="color: #007bff; text-align: center;">NextLevelHub</h1>
+                <h2 style="color: #333;">Recupera tu contrasena</h2>
+                <p>Hola ' . $nombre . ',</p>
+                <p>Hemos recibido una solicitud para cambiar la contrasena de tu cuenta.</p>
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="' . $urlResetEscapada . '"
+                       style="background-color: #007bff; color: #ffffff; padding: 14px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+                        Cambiar contrasena
+                    </a>
+                </div>
+                <p>Si el boton no funciona, copia y pega este enlace en tu navegador:</p>
+                <p><a href="' . $urlResetEscapada . '">' . $urlResetEscapada . '</a></p>
+                <p>Este enlace caducara en 1 hora.</p>
+                <p>Si no has solicitado este cambio, puedes ignorar este mensaje.</p>
+            </div>
+        </body>
+        </html>';
     }
 }

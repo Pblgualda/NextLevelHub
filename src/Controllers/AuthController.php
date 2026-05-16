@@ -5,6 +5,7 @@ namespace NextLevelHub\Controllers;
 use NextLevelHub\Core\BaseDatos;
 use NextLevelHub\Core\Pages;
 use Google\Client as GoogleClient;
+use NextLevelHub\Services\EmailService;
 use NextLevelHub\Services\UsuarioService;
 use NextLevelHub\Request\LoginRequest;
 use NextLevelHub\Request\UserRequest;
@@ -12,12 +13,14 @@ use NextLevelHub\Request\UserRequest;
 class AuthController
 {
     private UsuarioService $usuarioService;
+    private EmailService $emailService;
     private Pages $pages;
 
     public function __construct()
     {
         $db = new BaseDatos();
         $this->usuarioService = new UsuarioService($db);
+        $this->emailService = new EmailService($db);
         $this->pages = new Pages();
     }
 
@@ -33,6 +36,145 @@ class AuthController
     public function login(): void
     {
         $this->pages->render('auth/formlogin');
+    }
+
+    public function forgotPassword(): void
+    {
+        $this->pages->render('auth/forgot_password');
+    }
+
+    public function sendPasswordReset(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . BASE_URL . 'auth/recuperar');
+            return;
+        }
+
+        $email = trim($_POST['email'] ?? '');
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $_SESSION['errors'] = ['Introduce un email valido.'];
+            header('Location: ' . BASE_URL . 'auth/recuperar');
+            return;
+        }
+
+        try {
+            $usuario = $this->usuarioService->createPasswordResetToken($email);
+            if ($usuario && !$this->emailService->sendPasswordReset($usuario, $email)) {
+                $_SESSION['errors'] = ['No se pudo enviar el correo de recuperacion. Intentalo mas tarde.'];
+                header('Location: ' . BASE_URL . 'auth/recuperar');
+                return;
+            }
+
+            $_SESSION['password_reset'] = 'sent';
+            header('Location: ' . BASE_URL . 'auth/login');
+        } catch (\Throwable $e) {
+            $_SESSION['errors'] = ['No se pudo iniciar la recuperacion. Intentalo mas tarde.'];
+            header('Location: ' . BASE_URL . 'auth/recuperar');
+        }
+    }
+
+    public function resetPassword(): void
+    {
+        $token = $_GET['token'] ?? '';
+        if (empty($token)) {
+            $_SESSION['errors'] = ['Token de recuperacion no valido.'];
+            header('Location: ' . BASE_URL . 'auth/recuperar');
+            return;
+        }
+
+        $usuario = $this->usuarioService->findByToken($token);
+        if (!$usuario || ($usuario->getTokenExp() !== null && strtotime($usuario->getTokenExp()) < time())) {
+            $_SESSION['errors'] = ['El enlace de recuperacion no es valido o ha caducado.'];
+            header('Location: ' . BASE_URL . 'auth/recuperar');
+            return;
+        }
+
+        $this->pages->render('auth/reset_password', [
+            'token' => $token,
+        ]);
+    }
+
+    public function updatePassword(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . BASE_URL . 'auth/recuperar');
+            return;
+        }
+
+        $token = $_POST['token'] ?? '';
+        $password = $_POST['password'] ?? '';
+        $passwordConfirm = $_POST['password_confirm'] ?? '';
+
+        if (empty($token)) {
+            $_SESSION['errors'] = ['Token de recuperacion no valido.'];
+            header('Location: ' . BASE_URL . 'auth/recuperar');
+            return;
+        }
+
+        if (strlen($password) < 8) {
+            $_SESSION['errors'] = ['La contrasena debe tener al menos 8 caracteres.'];
+            header('Location: ' . BASE_URL . 'auth/restablecer?token=' . urlencode($token));
+            return;
+        }
+
+        if ($password !== $passwordConfirm) {
+            $_SESSION['errors'] = ['Las contrasenas no coinciden.'];
+            header('Location: ' . BASE_URL . 'auth/restablecer?token=' . urlencode($token));
+            return;
+        }
+
+        try {
+            $this->usuarioService->resetPasswordWithToken($token, $password);
+            $_SESSION['password_reset'] = 'complete';
+            header('Location: ' . BASE_URL . 'auth/login');
+        } catch (\Throwable $e) {
+            $_SESSION['errors'] = [$e->getMessage()];
+            header('Location: ' . BASE_URL . 'auth/recuperar');
+        }
+    }
+
+    public function confirmarEmail(): void
+    {
+        $token = $_GET['token'] ?? '';
+
+        if (empty($token)) {
+            $_SESSION['errors'] = ['Token de confirmación no válido.'];
+            header('Location: ' . BASE_URL . 'auth/login');
+            return;
+        }
+
+        try {
+            $usuario = $this->usuarioService->findByToken($token);
+            if (!$usuario) {
+                $_SESSION['errors'] = ['El enlace de confirmación no es válido.'];
+                header('Location: ' . BASE_URL . 'auth/login');
+                return;
+            }
+
+            if ($usuario->getConfirmado() == true) {
+                $_SESSION['register'] = 'already_confirmed';
+                header('Location: ' . BASE_URL . 'auth/login');
+                return;
+            }
+
+            if ($usuario->getTokenExp() != null && strtotime($usuario->getTokenExp()) < time()) {
+                $_SESSION['errors'] = ['El enlace de confirmación ha caducado. Solicita uno nuevo.'];
+                header('Location: ' . BASE_URL . 'auth/login');
+                return;
+            }
+
+            $usuario->setConfirmado(true);
+            $usuario->setToken(null);
+            $usuario->setTokenExp(null);
+            $usuario->setUpdatedAt(date('Y-m-d H:i:s'));
+
+            $this->usuarioService->save($usuario);
+            $_SESSION['register'] = 'confirmed';
+            header('Location: ' . BASE_URL . 'auth/login');
+        } catch (\Throwable $e) {
+            $_SESSION['errors'] = ['No se pudo confirmar la cuenta. Inténtalo más tarde.'];
+            header('Location: ' . BASE_URL . 'auth/login');
+        }
     }
 
     public function googleLogin(): void
@@ -189,17 +331,20 @@ class AuthController
             );
 
             if ($result) {
-                $_SESSION['register'] = 'success';
-                $redirect = $_SESSION['cart_redirect'] ?? null;
-                if ($redirect) {
-                    unset($_SESSION['cart_redirect']);
-                    header('Location: ' . $redirect);
+                $usuario = $this->usuarioService->findByEmail($data['email']);
+                $emailSent = $usuario
+                    ? $this->emailService->sendRegistrationConfirmation($usuario, $usuario->getEmail())
+                    : false;
+
+                if (!$emailSent) {
+                    $_SESSION['errors'] = ['Tu cuenta se ha creado, pero no se pudo enviar el correo de confirmacion. Contacta con soporte.'];
+                    header('Location: ' . BASE_URL . 'auth/register');
                     return;
                 }
-
-                header('Location: ' . BASE_URL);
+                $_SESSION['register'] = 'pending_confirmation';
+                header('Location: ' . BASE_URL . 'auth/login');
             } else {
-                $_SESSION['errors'] = ['Error al registrar el usuario. Intenta más tarde.'];
+                $_SESSION['errors'] = ['Error al registrar el usuario. Intenta mas tarde.'];
                 header('Location: ' . BASE_URL . 'auth/register');
             }
         } catch (\Exception $e) {

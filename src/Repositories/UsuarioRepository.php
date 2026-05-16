@@ -84,6 +84,7 @@ class UsuarioRepository
             confirmado = :confirmado,
             token = :token,
             token_exp = :token_exp,
+            created_at = :created_at,
             updated_at = :updated_at
             WHERE id = :id";
 
@@ -112,6 +113,21 @@ class UsuarioRepository
         } catch (PDOException $e) {
             throw new RuntimeException(
                 "Error al buscar usuario por id: {$e->getMessage()}",
+                previous: $e
+            );
+        }
+    }
+
+    public function findByToken(string $token): ?Usuario
+    {
+        try {
+            $sql = "SELECT * FROM usuarios WHERE token = :token";
+            $this->conexion->ejecutar($sql, [':token' => ['valor' => $token]]);
+            $resultado = $this->conexion->extraer_registro();
+            return $resultado ? Usuario::fromArray($resultado) : null;
+        }catch(PDOException $e){
+            throw new RuntimeException(
+                "Error al buscar usuario por token: {$e->getMessage()}",
                 previous: $e
             );
         }

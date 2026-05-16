@@ -148,4 +148,9 @@ class Usuario
     {
         $this->updated_at = $updated_at;
     }
+
+    public function getConfirmado(): bool
+    {
+        return $this->confirmado;
+    }
 }

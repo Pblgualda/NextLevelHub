@@ -49,6 +49,26 @@ Router::add('POST', '/auth/save', static function() {
     (new AuthController())->save();
 });
 
+Router::add('GET', '/auth/confirmar', static function() {
+    (new AuthController())->confirmarEmail();
+});
+
+Router::add('GET', '/auth/recuperar', static function() {
+    (new AuthController())->forgotPassword();
+});
+
+Router::add('POST', '/auth/recuperar', static function() {
+    (new AuthController())->sendPasswordReset();
+});
+
+Router::add('GET', '/auth/restablecer', static function() {
+    (new AuthController())->resetPassword();
+});
+
+Router::add('POST', '/auth/restablecer', static function() {
+    (new AuthController())->updatePassword();
+});
+
 // Rutas de Categorías
 Router::add('GET', '/categoria/listar', static function() {
     AdminMiddleware::handle();

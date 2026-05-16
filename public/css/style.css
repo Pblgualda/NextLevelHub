@@ -307,6 +307,15 @@ main p {
     margin-bottom: 5px;
 }
 
+.success-container {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    border-radius: 8px;
+    color: #155724;
+}
+
 /* Tables */
 table {
     width: 100%;
@@ -398,6 +407,24 @@ tbody tr:hover {
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
+}
+
+.home-products {
+    margin-top: 36px;
+}
+
+.product-card .add-to-cart-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+
+.product-card input[type="number"] {
+    padding: 8px;
+    border: 2px solid #e1e8ed;
+    border-radius: 8px;
 }
 
 

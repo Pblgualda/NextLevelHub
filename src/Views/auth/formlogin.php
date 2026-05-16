@@ -1,9 +1,13 @@
 <?php
 // Obtener errores de la sesión si existen
 $errors = $_SESSION['errors'] ?? [];
+$registerStatus = $_SESSION['register'] ?? null;
+$passwordResetStatus = $_SESSION['password_reset'] ?? null;
 
 // Limpiar los errores de la sesión después de mostrarlos
 unset($_SESSION['errors']);
+unset($_SESSION['register']);
+unset($_SESSION['password_reset']);
 ?>
 
     <div class="container-user-form">
@@ -19,7 +23,31 @@ unset($_SESSION['errors']);
             </div>
         <?php endif; ?>
 
+        <?php if ($registerStatus === 'pending_confirmation'): ?>
+            <div class="success-container">
+                Te hemos enviado un correo de confirmacion. Revisa tu bandeja de entrada y confirma tu cuenta antes de iniciar sesion.
+            </div>
+        <?php elseif ($registerStatus === 'confirmed'): ?>
+            <div class="success-container">
+                Tu cuenta se ha confirmado correctamente. Ya puedes iniciar sesion.
+            </div>
+        <?php elseif ($registerStatus === 'already_confirmed'): ?>
+            <div class="success-container">
+                Tu cuenta ya estaba confirmada. Puedes iniciar sesion.
+            </div>
+        <?php endif; ?>
+
         <a class="btn-google" href="<?= BASE_URL ?>auth/google">Iniciar sesión con Google</a>
+
+        <?php if ($passwordResetStatus === 'sent'): ?>
+            <div class="success-container">
+                Si el email existe en nuestra tienda, te hemos enviado un enlace para cambiar la contrasena.
+            </div>
+        <?php elseif ($passwordResetStatus === 'complete'): ?>
+            <div class="success-container">
+                Tu contrasena se ha actualizado correctamente. Ya puedes iniciar sesion.
+            </div>
+        <?php endif; ?>
 
         <form method="POST" action="<?= BASE_URL ?>auth/login">
             
@@ -52,5 +80,8 @@ unset($_SESSION['errors']);
 
         <div class="link-register">
             ¿No tienes cuenta? <a href="<?=BASE_URL?>/auth/register">Regístrate aquí</a>
+        </div>
+        <div class="link-register">
+            <a href="<?= BASE_URL ?>auth/recuperar">He olvidado mi contrasena</a>
         </div>
     </div>
